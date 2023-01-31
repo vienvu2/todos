@@ -7,8 +7,10 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await windowManager.ensureInitialized();
   windowManager.setAlwaysOnTop(true);
-  windowManager.setSize(const Size(350, 350 * 18 / 9), animate: true);
+  windowManager.setSize(const Size(350, 350 * 2), animate: true);
   windowManager.setTitleBarStyle(TitleBarStyle.hidden);
+  windowManager.setMinimumSize(const Size(350, 350));
+  windowManager.setMaximumSize(const Size(350, 350 * 3));
   runApp(const MyApp());
 }
 

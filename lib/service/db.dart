@@ -9,7 +9,14 @@ const String columnDone = 'done';
 class Todo {
   int id = 0;
   String title = '';
+  String description = '';
+  String attachment = '';
+  bool isChild = false;
+  int time = 0;
+  int realTime = 0;
   bool done = false;
+  DateTime startAt = DateTime.now();
+  DateTime endAt = DateTime.now();
 
   Map<String, Object?> toMap() {
     var map = <String, Object?>{
@@ -22,8 +29,8 @@ class Todo {
   Todo();
 
   Todo.fromMap(Map<String, dynamic> map) {
-    id = map[columnId];
-    title = map[columnTitle];
+    id = map[columnId] ?? 0;
+    title = map[columnTitle] ?? '';
     done = map[columnDone] == 1;
   }
 }
