@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:todos/service/db.dart';
+import 'package:todos/service/ultil.dart';
 
 class ListTodo extends StatelessWidget {
   ListTodo({super.key});
@@ -20,6 +21,53 @@ class ListTodo extends StatelessWidget {
               fontWeight: FontWeight.bold,
               fontSize: 14,
             ),
+          ),
+        ),
+        Obx(
+          () => Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [1, 2, 3, 4, 5, 6, 7]
+                .map(
+                  (offset) => Expanded(
+                    child: InkWell(
+                      onTap: () {
+                        c.dataActive.value = offset;
+                      },
+                      child: Container(
+                        margin: const EdgeInsets.all(5),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                          color: Colors.lightBlue
+                              .withOpacity(c.dataActive == offset ? 1 : 0.1),
+                        ),
+                        padding: const EdgeInsets.only(top: 12, bottom: 12),
+                        child: Column(
+                          children: [
+                            Text(
+                              offset == 7 ? 'CN' : 'Thứ ${offset + 2}',
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(fontSize: 12),
+                            ),
+                            Text(
+                              c.dateStart.value
+                                  .add(
+                                    Duration(days: offset),
+                                  )
+                                  .day
+                                  .toString(),
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                )
+                .toList(),
           ),
         ),
         Expanded(
@@ -52,9 +100,25 @@ class ListTodo extends StatelessWidget {
                                       Expanded(
                                         child: Text(
                                           "Còn 5h3p /  ${item.time}",
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                               fontSize: 12,
                                               color: Colors.green),
+                                        ),
+                                      ),
+                                      InkWell(
+                                        onTap: () {
+                                          c.delete(item);
+                                        },
+                                        child: const Padding(
+                                          padding: EdgeInsets.all(5),
+                                          child: Text(
+                                            'Xoá',
+                                            style: TextStyle(
+                                              fontSize: 11,
+                                              color: Colors.red,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
                                         ),
                                       ),
                                       InkWell(
@@ -98,9 +162,9 @@ class CreateButton extends StatelessWidget {
         c.isAdd.value = true;
       },
       child: Container(
-        padding: EdgeInsets.all(12),
+        padding: const EdgeInsets.all(12),
         alignment: Alignment.center,
-        child: Text('Thêm mới',
+        child: const Text('Thêm mới',
             style: TextStyle(
               fontSize: 12,
               color: Colors.lightBlue,
@@ -127,7 +191,7 @@ class CreateForm extends StatelessWidget {
         child: Column(
           children: [
             Row(children: [
-              Expanded(
+              const Expanded(
                 child: Text(
                   'Thêm mới',
                   style: TextStyle(
@@ -139,7 +203,7 @@ class CreateForm extends StatelessWidget {
                 onTap: () {
                   c.isAdd.value = false;
                 },
-                child: Text(
+                child: const Text(
                   'Đóng',
                   style: TextStyle(
                     fontSize: 12,
@@ -163,6 +227,7 @@ class CreateForm extends StatelessWidget {
                           border: OutlineInputBorder(),
                           labelText: 'Nội dung công việc',
                         ),
+                        autofocus: true,
                         initialValue: c.newTodo.value.title,
                         onChanged: (e) {
                           c.newTodo.value.title = e;
@@ -195,11 +260,11 @@ class CreateForm extends StatelessWidget {
                               style: const TextStyle(fontSize: 14),
                               decoration: const InputDecoration(
                                 border: OutlineInputBorder(),
-                                labelText: 'Time (phút)',
+                                labelText: 'Time (giờ)',
                               ),
                               initialValue: c.newTodo.value.time.toString(),
                               onChanged: (e) {
-                                c.newTodo.value.time = int.parse(e);
+                                c.newTodo.value.time = double.parse(e);
                               },
                             ),
                           ),
@@ -215,7 +280,8 @@ class CreateForm extends StatelessWidget {
                               ),
                               initialValue: c.newTodo.value.startAtString,
                               onChanged: (e) {
-                                c.newTodo.value.startAtString = e;
+                                c.newTodo.value.startAt = DateTime.parse(e);
+                                print(c.newTodo.value.startAt);
                               },
                             ),
                           ),
@@ -246,24 +312,33 @@ class ListTodoController extends GetxController {
   final tabActive = 'list'.obs;
   final isAdd = false.obs;
   final list = <Todo>[].obs;
+  final dateStart = DateTime.now().obs;
+  final dataActive = 1.obs;
 
   final todoRequest = TodoProvider();
 
-  final newTodo = Rx(Todo.fromMap({
-    'title': '',
-    'description': '',
-    'time': 120,
-  }));
+  final newTodo = Rx(
+    Todo.fromMap({
+      'title': '',
+      'description': '',
+      'time': 0.2,
+      'startAt': '2023-01-01 12:20'
+    }),
+  );
 
-  @override
-  void onInit() {
-    super.onInit();
-  }
-
+  // DateTime getDate(DateTime d) => DateTime(d.year, d.month, d.day);
   @override
   void onReady() async {
-    await todoRequest.open('sample');
-    getData();
+    await todoRequest.open('1.0.0');
+    await getData();
+    if (list.isEmpty) {
+      isAdd.value = true;
+    }
+
+    final date = DateTime.now();
+
+    dateStart.value = date.subtract(Duration(days: date.weekday - 1));
+
     super.onReady();
   }
 
@@ -278,8 +353,14 @@ class ListTodoController extends GetxController {
     newTodo.value = Todo.fromMap({
       'title': '',
       'description': '',
-      'time': 120,
+      'time': 0.2,
+      'startAt': '2023-01-01 12:20'
     });
+    await getData();
+  }
+
+  delete(Todo todo) async {
+    await todoRequest.delete(todo.id);
     await getData();
   }
 
