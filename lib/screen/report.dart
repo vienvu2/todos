@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class Config extends StatelessWidget {
-  const Config({super.key});
+class Report extends StatelessWidget {
+  const Report({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -11,7 +11,7 @@ class Config extends StatelessWidget {
           height: 50,
           alignment: Alignment.center,
           child: const Text(
-            'Config',
+            'Report',
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 14,

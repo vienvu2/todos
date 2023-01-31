@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:todos/screen/config.dart';
 import 'package:todos/screen/list.dart';
+import 'package:todos/screen/profile.dart';
+import 'package:todos/screen/report.dart';
 
 class MainPage extends StatelessWidget {
   MainPage({super.key});
@@ -14,6 +17,15 @@ class MainPage extends StatelessWidget {
         () {
           if (c.tabActive.value == 'list') {
             return ListTodo();
+          }
+          if (c.tabActive.value == 'report') {
+            return Report();
+          }
+          if (c.tabActive.value == 'config') {
+            return Config();
+          }
+          if (c.tabActive.value == 'profile') {
+            return Profile();
           }
           return Text(c.tabActive.value);
         },
@@ -63,7 +75,7 @@ class MainPage extends StatelessWidget {
               ),
               const SizedBox(width: 50, height: 50),
               IconButton(
-                icon: c.tabActive.value == 'print'
+                icon: c.tabActive.value == 'config'
                     ? const Icon(
                         Icons.settings,
                         color: Colors.lightBlue,
@@ -73,7 +85,7 @@ class MainPage extends StatelessWidget {
                         color: Colors.black38,
                       ),
                 onPressed: () {
-                  c.tabActive.value = 'print';
+                  c.tabActive.value = 'config';
                 },
               ),
               IconButton(
