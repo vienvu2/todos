@@ -16,9 +16,6 @@ class Todo {
       columnTitle: title,
       columnDone: done == true ? 1 : 0
     };
-    if (id != null) {
-      map[columnId] = id;
-    }
     return map;
   }
 

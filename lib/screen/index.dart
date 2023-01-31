@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:todos/screen/list.dart';
 
 class MainPage extends StatelessWidget {
   MainPage({super.key});
@@ -9,10 +10,13 @@ class MainPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Obx(
-          () => Text(c.tabActive.value),
-        ),
+      body: Obx(
+        () {
+          if (c.tabActive.value == 'list') {
+            return ListTodo();
+          }
+          return Text(c.tabActive.value);
+        },
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {},
