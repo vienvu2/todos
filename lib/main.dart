@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
-import 'package:todos/screen/list.dart';
+import 'package:todos/screen/index.dart';
 import 'package:window_manager/window_manager.dart';
 
 void main() async {
@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.lime,
       ),
-      home: const ListPage(),
+      home: MainPage(),
     );
   }
 }
