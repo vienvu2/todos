@@ -93,13 +93,46 @@ class ListTodo extends StatelessWidget {
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(item.title),
+                                  Row(
+                                    children: [
+                                      Text(item.title),
+                                      const SizedBox(width: 8),
+                                      Container(
+                                        padding: const EdgeInsets.only(
+                                          top: 2,
+                                          bottom: 2,
+                                          left: 7,
+                                          right: 7,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: Colors.lightBlue,
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                        ),
+                                        child: Text(
+                                          item.type.toUpperCase(),
+                                          style: const TextStyle(
+                                            fontSize: 10,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                   const SizedBox(height: 4),
+                                  Text(
+                                    item.description,
+                                    style: const TextStyle(
+                                      fontSize: 12,
+                                      color: Colors.black45,
+                                    ),
+                                  ),
                                   Row(
                                     children: [
                                       Expanded(
                                         child: Text(
-                                          "Còn 5h3p /  ${item.time}",
+                                          "Done trong ${item.time} giờ",
                                           style: const TextStyle(
                                               fontSize: 12,
                                               color: Colors.green),
@@ -225,6 +258,19 @@ class CreateForm extends StatelessWidget {
                         style: const TextStyle(fontSize: 14),
                         decoration: const InputDecoration(
                           border: OutlineInputBorder(),
+                          labelText: 'Loại',
+                        ),
+                        autofocus: true,
+                        initialValue: c.newTodo.value.type,
+                        onChanged: (e) {
+                          c.newTodo.value.type = e;
+                        },
+                      ),
+                      const SizedBox(height: 12),
+                      TextFormField(
+                        style: const TextStyle(fontSize: 14),
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
                           labelText: 'Nội dung công việc',
                         ),
                         autofocus: true,
@@ -321,7 +367,7 @@ class ListTodoController extends GetxController {
     Todo.fromMap({
       'title': '',
       'description': '',
-      'time': 0.2,
+      'time': 2.0,
       'startAt': '2023-01-01 12:20'
     }),
   );
@@ -329,7 +375,7 @@ class ListTodoController extends GetxController {
   // DateTime getDate(DateTime d) => DateTime(d.year, d.month, d.day);
   @override
   void onReady() async {
-    await todoRequest.open('1.0.0');
+    await todoRequest.open('1.0.3');
     await getData();
     if (list.isEmpty) {
       isAdd.value = true;
@@ -349,11 +395,12 @@ class ListTodoController extends GetxController {
 
   save() async {
     isAdd.value = false;
+    print(newTodo.value.toMap());
     await todoRequest.insert(newTodo.value);
     newTodo.value = Todo.fromMap({
       'title': '',
       'description': '',
-      'time': 0.2,
+      'time': 2.0,
       'startAt': '2023-01-01 12:20'
     });
     await getData();

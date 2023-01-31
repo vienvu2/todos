@@ -5,6 +5,7 @@ class Todo {
   int id = 0;
   String title = '';
   String description = '';
+  String type = '';
   String attachment = '';
   bool isChild = false;
   double time = 0;
@@ -21,6 +22,7 @@ class Todo {
       'title': title,
       'description': description,
       'time': time,
+      'type': type,
       'done': done == true ? 1 : 0,
       'startAt': startAt.toString(),
       'endAt': endAt.toString(),
@@ -34,6 +36,8 @@ class Todo {
   Todo.fromMap(Map<String, dynamic> map) {
     id = map['id'] ?? 0;
     title = map['title'] ?? '';
+    time = map['time'] ?? 0.0;
+    type = map['type'] ?? '';
     description = map['description'] ?? '';
   }
 }
@@ -50,9 +54,10 @@ class TodoProvider {
           create table todo ( 
             id integer primary key autoincrement, 
             title text not null,
-            description text not null,
-            time integer not null,
-            endAt text not null,
+            type text,
+            description text,
+            time double not null,
+            endAt text ,
             startAt text not null,
             done integer not null,
             parentId integer
@@ -68,9 +73,19 @@ class TodoProvider {
   }
 
   Future<List<Todo>> getTodoList(int page, int limit) async {
-    List<Map<String, dynamic>> maps = await db.query('todo',
-        columns: ['id', 'done', 'title', 'time', 'description', 'parentId'],
-        whereArgs: [page]);
+    List<Map<String, dynamic>> maps = await db.query('todo', columns: [
+      'id',
+      'done',
+      'title',
+      'time',
+      'description',
+      'parentId',
+      'type'
+    ], whereArgs: [
+      page
+    ]);
+
+    print(maps);
 
     return maps.map((e) => Todo.fromMap(e)).toList();
   }
