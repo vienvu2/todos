@@ -6,8 +6,9 @@ import 'package:window_manager/window_manager.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await windowManager.ensureInitialized();
-  // windowManager.setAlwaysOnTop(true);
-  windowManager.setSize(const Size(350, 350 * 16 / 9), animate: true);
+  windowManager.setAlwaysOnTop(true);
+  windowManager.setSize(const Size(350, 350 * 18 / 9), animate: true);
+  windowManager.setTitleBarStyle(TitleBarStyle.hidden);
   runApp(const MyApp());
 }
 
@@ -21,7 +22,7 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primarySwatch: Colors.lime,
+        primarySwatch: Colors.lightBlue,
       ),
       home: MainPage(),
     );

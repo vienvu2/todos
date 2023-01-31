@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 class MainPage extends StatelessWidget {
   MainPage({super.key});
 
-  final ListController c = Get.put(ListController());
+  final MainController c = Get.put(MainController());
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +16,10 @@ class MainPage extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {},
-        child: const Icon(Icons.add),
+        child: const Icon(
+          Icons.add_rounded,
+          color: Colors.white,
+        ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomAppBar(
@@ -91,6 +94,6 @@ class MainPage extends StatelessWidget {
   }
 }
 
-class ListController extends GetxController {
+class MainController extends GetxController {
   final tabActive = 'list'.obs;
 }
